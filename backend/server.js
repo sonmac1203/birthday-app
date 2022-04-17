@@ -1,21 +1,24 @@
 require('dotenv').config();
 const express = require('express');
-const router = express();
+const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors');
-const { MongoClient } = require('mongodb');
 
-router.use(express.json({ extended: false }));
-router.use(cors());
+const mainRoutes = require('./routes');
+const dbo = require('./mongoClient');
+app.use(mainRoutes);
 
-const uri = process.env.ATLAS_URI;
-const databaseName = 'birthday-project';
-const db = new MongoClient(uri);
+app.use(express.json({ extended: false }));
+app.use(cors());
 
-router.get('/', (req, res) => {
+app.get('/', (req, res) => {
   return res.status(200).json({ msg: 'API connected' });
 });
 
-router.listen(port, () => {
-  console.log(`Server is now running on port ${port}`);
+app.listen(port, () => {
+  // perform a database connection when server starts
+  dbo.connectToServer(function (err) {
+    if (err) console.error(err);
+  });
+  console.log(`Server is running on port: ${port}`);
 });
