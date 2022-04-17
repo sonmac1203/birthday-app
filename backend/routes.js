@@ -17,13 +17,40 @@ router.get('/dates', async (req, res) => {
 router.post('/createDate', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    dbConnect.collection('dates').insert({
+    dbConnect.collection('dates').insertOne({
       name: req.query.name,
       description: req.query.description,
       date: req.query.date,
       tag: req.query.tag,
     });
-    res.status(200).send('Succesfully create a new date!');
+    res.status(200).send('Successfully create a new date!');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
+router.post('/addPhoto', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('gallery').insertOne({
+      url: req.query.url,
+      description: req.query.description,
+      date: req.query.date,
+      location: req.query.location,
+    });
+    res.status(200).send('Successfully added a new photo to gallery!');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
+router.get('/gallery', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    const photos = await dbConnect.collection('gallery').find({}).toArray();
+    res.status(200).send(photos);
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
