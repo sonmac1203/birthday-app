@@ -57,4 +57,29 @@ router.get('/gallery', async (req, res) => {
   }
 });
 
+router.get('/notes', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    const notes = await dbConnect.collection('notes').find({}).toArray();
+    res.status(200).send(notes);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
+router.post('/createNote', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('notes').insertOne({
+      description: req.query.description,
+      date: req.query.date,
+    });
+    res.status(200).send('Successfully create a new date!');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
 module.exports = router;

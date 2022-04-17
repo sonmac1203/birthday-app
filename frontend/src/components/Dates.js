@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Card } from 'react-bootstrap';
 import { DayPicker } from 'react-day-picker';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import Calendar from 'react-calendar';
+import { addDays, differenceInCalendarDays } from 'date-fns';
 
 const Dates = () => {
+  const [eventsObject, setEventsObject] = useState({});
   const [dates, setDates] = useState([]);
   const [showDateModal, setShowDateModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const dates = await axios.get('http://localhost:3001/dates');
-      setDates(dates.data);
+      const response = await axios.get('http://localhost:3001/dates');
+      let dateObj = {};
+      response.data.map((entry) => {
+        dateObj[entry.date] = entry;
+      });
+      setEventsObject(dateObj);
     })();
   }, [refresh]);
 
@@ -21,6 +28,9 @@ const Dates = () => {
       <header>
         <h1>Dates & Events</h1>
       </header>
+      <div className='d-flex justify-content-center'>
+        <CalendarModule eventsObject={eventsObject} />
+      </div>
       <Button onClick={() => setShowDateModal(true)}>Add</Button>
       <DateModal
         show={showDateModal}
@@ -28,10 +38,77 @@ const Dates = () => {
         setRefresh={setRefresh}
         refresh={refresh}
       />
-      {dates.length > 0 &&
-        dates.map((date, k) => <DateItem key={k} date={date} />)}
+      {/* {events.length > 0 &&
+        events.map((event, k) => <DateItem key={k} date={event} />)} */}
       <ToastContainer />
     </section>
+  );
+};
+
+const CalendarModule = ({ eventsObject }) => {
+  const appendYear = (date) => {
+    const year = date.slice(-4);
+    return date.replace(year, new Date().getFullYear());
+  };
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedObj, setSelectedObj] = useState({});
+  const highlightedDays = Object.keys(eventsObject).map((key) => {
+    let dayObj = eventsObject[key];
+    let formattedDate;
+    if (dayObj.tag === 'birthday' || dayObj.tag === 'anniversary') {
+      formattedDate = appendYear(key);
+    } else {
+      formattedDate = key;
+    }
+    return new Date(formattedDate);
+  });
+  const [value, setValue] = useState(new Date());
+  const [dayClicked, setDayClicked] = useState(false);
+  function onChange(nextValue) {
+    setValue(nextValue);
+  }
+  function isSameDay(a, b) {
+    return differenceInCalendarDays(a, b) === 0;
+  }
+  function tileClassName({ date, view }) {
+    if (
+      view === 'month' &&
+      highlightedDays.find((dDate) => isSameDay(dDate, date))
+    ) {
+      return ['highlight', 'background'];
+    }
+  }
+  const onClickDay = (value, event) => {
+    const formattedVal = value.toLocaleDateString();
+    setSelectedDay(formattedVal);
+    if (eventsObject.hasOwnProperty(formattedVal)) {
+      setSelectedObj(eventsObject[formattedVal]);
+    }
+    setDayClicked(!dayClicked);
+  };
+
+  return (
+    <div>
+      <Calendar
+        onChange={onChange}
+        value={value}
+        tileClassName={tileClassName}
+        onClickDay={onClickDay}
+      />
+      {dayClicked && (
+        <div>
+          <Card>
+            <Card.Body>
+              <Card.Title>{selectedDay}</Card.Title>
+              <Card.Subtitle className='mb-2 text-muted'>
+                {selectedObj.name}
+              </Card.Subtitle>
+              <Card.Text>{selectedObj.description}</Card.Text>
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+    </div>
   );
 };
 
