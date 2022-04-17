@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import Dates from './components/Dates';
-import Memories from './components/Memories';
+import Gallery from './components/Gallery';
 import Timer from './components/Timer';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <Container>
       <Timer startingDate={startingDate} />
       <Dates />
-      <Memories />
+      <Gallery />
     </Container>
   );
 }

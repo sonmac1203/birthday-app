@@ -19,7 +19,7 @@ const Dates = () => {
   return (
     <section id='dates'>
       <header>
-        <h1>Dates</h1>
+        <h1>Dates & Events</h1>
       </header>
       <Button onClick={() => setShowDateModal(true)}>Add</Button>
       <DateModal
