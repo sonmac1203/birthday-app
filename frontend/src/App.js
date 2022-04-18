@@ -11,8 +11,8 @@ function App() {
     <Container>
       <Timer startingDate={startingDate} />
       <Events />
-      <Gallery />
       <Notes />
+      <Gallery />
     </Container>
   );
 }

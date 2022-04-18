@@ -99,6 +99,7 @@ router.post('/createNote', async (req, res) => {
     dbConnect.collection('notes').insertOne({
       description: req.query.description,
       date: req.query.date,
+      pinned: false,
     });
     res.status(200).send('Successfully create a new date!');
   } catch (err) {

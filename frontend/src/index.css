@@ -49,3 +49,13 @@ section#timer {
   min-height: 100vh;
   background-color: red;
 }
+
+section#events {
+  min-height: 100vh;
+  background-color: yellow;
+}
+
+section#notes {
+  min-height: 100vh;
+  background-color: green;
+}

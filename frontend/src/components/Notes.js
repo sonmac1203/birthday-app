@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Card } from 'react-bootstrap';
+import { Button, Modal, Form, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Notes = () => {
   const [noteList, setNoteList] = useState([]);
-  const [showNoteModal, setShowNoteModal] = useState(false);
+
   useEffect(() => {
     (async () => {
       const response = await axios.get('http://localhost:3001/notes');
@@ -15,10 +15,16 @@ const Notes = () => {
   return (
     <section id='notes'>
       <h1>Notes & Sugars</h1>
-      <Button onClick={() => setShowNoteModal(true)}>Add note</Button>
-      <NoteModal show={showNoteModal} setShow={setShowNoteModal} />
-      {noteList.length > 0 &&
-        noteList.map((note, k) => <NoteItem note={note} key={k} />)}
+      <Row>
+        <Col md='6'>
+          {noteList.length > 0 &&
+            noteList.map((note, k) => <NoteItem note={note} key={k} />)}
+        </Col>
+        <Col md='6'>
+          <NoteForm />
+        </Col>
+      </Row>
+
       <ToastContainer />
     </section>
   );
@@ -36,12 +42,8 @@ const NoteItem = ({ note: { time, description } }) => {
   );
 };
 
-const NoteModal = ({ show, setShow }) => {
+const NoteForm = () => {
   const [description, setDescription] = useState('');
-
-  const handleClose = () => {
-    setShow(false);
-  };
   const handleSave = async () => {
     const params = {
       params: {
@@ -53,46 +55,27 @@ const NoteModal = ({ show, setShow }) => {
       .post('http://localhost:3001/createNote', null, params)
       .then((res) => {
         toast.success(res.data);
-        handleClose();
       })
       .catch((err) => {
         toast.error(err.response.data);
-        handleClose();
       });
   };
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Add a note</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <NoteModalForm setDescription={setDescription} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant='secondary' onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant='primary' onClick={handleSave}>
-          Save Changes
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
-
-const NoteModalForm = ({ setDescription }) => {
-  return (
     <Form>
-      <Form.Group className='mb-3' controlId='eventTitle'>
-        <Form.Label>What do you want to say?</Form.Label>
+      <Form.Group className='mb-3' controlId='noteForm'>
+        <Form.Label>
+          <h3>What do you want to say?</h3>
+        </Form.Label>
         <Form.Control
           as='textarea'
           placeholder='Enter description'
+          autoFocus
           onChange={(e) => {
             setDescription(e.target.value);
           }}
         />
       </Form.Group>
+      <Button onClick={handleSave}>Add</Button>
     </Form>
   );
 };

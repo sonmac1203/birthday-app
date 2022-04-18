@@ -26,7 +26,7 @@ const Events = () => {
   }, [refresh]);
 
   return (
-    <section id='dates'>
+    <section id='events'>
       <header className='d-flex align-items-center gap-3'>
         <h1>Dates & Events</h1>
         <i
