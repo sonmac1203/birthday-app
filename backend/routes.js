@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoClient = require('./mongoClient');
+const ObjectId = require('mongodb').ObjectId;
 const databaseName = 'birthday-project';
 
 router.get('/dates', async (req, res) => {
@@ -24,6 +25,29 @@ router.post('/createDate', async (req, res) => {
       tag: req.query.tag,
     });
     res.status(200).send('Successfully create a new date!');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
+router.post('/updateDate', async (req, res) => {
+  try {
+    let updateBlock = {};
+    if (req.query.name) {
+      updateBlock['name'] = req.query.name;
+    }
+    if (req.query.description) {
+      updateBlock['description'] = req.query.description;
+    }
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('dates').updateOne(
+      { _id: ObjectId(req.query.id) },
+      {
+        $set: updateBlock,
+      }
+    );
+    res.status(200).send('Successfully update a date!');
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
