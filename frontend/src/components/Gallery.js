@@ -15,7 +15,7 @@ const Gallery = () => {
     })();
   }, []);
   return (
-    <div>
+    <section id='gallery'>
       <h1>Gallery</h1>
       <Button
         onClick={() => {
@@ -33,7 +33,7 @@ const Gallery = () => {
             <PhotoItem photo={singlePhoto} key={key} />
           ))}
       </Row>
-    </div>
+    </section>
   );
 };
 

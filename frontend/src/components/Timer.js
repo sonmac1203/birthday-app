@@ -27,21 +27,23 @@ const TimerBox = ({ time }) => {
   var s = Math.floor(time % 60);
 
   return (
-    <div className='mt-5 d-flex justify-content-center'>
-      <div className='card' style={{ width: '800px' }}>
-        <div className='card-body'>
-          <div className='card-title'>It has been ...</div>
-          <div className='card-text'>
-            <h2>
-              {d} days, {h}
-              {h <= 1 ? ' hour' : ' hours'}, {m}
-              {m <= 1 ? ' minute' : ' minutes'}, and {s}
-              {s <= 1 ? ' second' : ' seconds'}
-            </h2>
+    <section id='timer'>
+      <div className='d-flex justify-content-center'>
+        <div className='card' style={{ width: '800px' }}>
+          <div className='card-body'>
+            <div className='card-title'>It has been ...</div>
+            <div className='card-text'>
+              <h2>
+                {d} days, {h}
+                {h <= 1 ? ' hour' : ' hours'}, {m}
+                {m <= 1 ? ' minute' : ' minutes'}, and {s}
+                {s <= 1 ? ' second' : ' seconds'}
+              </h2>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

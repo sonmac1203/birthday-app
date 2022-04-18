@@ -12,10 +12,40 @@ code {
     monospace;
 }
 
+.cursor {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.react-calendar.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.react-calendar .full-width-display {
+  width: 100%;
+}
+
 .react-calendar .highlight {
   outline: 2px solid red;
 }
 
 .react-calendar .background {
   background-color: peachpuff;
+}
+
+/* section#timer,
+#dates,
+#gallery,
+#notes {
+  padding: 5vh;
+} */
+
+section#timer {
+  min-height: 100vh;
+  background-color: red;
 }

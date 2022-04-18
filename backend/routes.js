@@ -4,34 +4,35 @@ const mongoClient = require('./mongoClient');
 const ObjectId = require('mongodb').ObjectId;
 const databaseName = 'birthday-project';
 
-router.get('/dates', async (req, res) => {
+router.get('/events', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    const dates = await dbConnect.collection('dates').find({}).toArray();
-    res.status(200).send(dates);
+    const events = await dbConnect.collection('events').find({}).toArray();
+    res.status(200).send(events);
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
   }
 });
 
-router.post('/createDate', async (req, res) => {
+router.post('/createEvent', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    dbConnect.collection('dates').insertOne({
+    dbConnect.collection('events').insertOne({
       name: req.query.name,
       description: req.query.description,
       date: req.query.date,
       tag: req.query.tag,
+      added: true,
     });
-    res.status(200).send('Successfully create a new date!');
+    res.status(200).send('Successfully create a new event!');
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
   }
 });
 
-router.post('/updateDate', async (req, res) => {
+router.post('/updateEvent', async (req, res) => {
   try {
     let updateBlock = {};
     if (req.query.name) {
@@ -41,7 +42,7 @@ router.post('/updateDate', async (req, res) => {
       updateBlock['description'] = req.query.description;
     }
     const dbConnect = await mongoClient.getDb(databaseName);
-    dbConnect.collection('dates').updateOne(
+    dbConnect.collection('events').updateOne(
       { _id: ObjectId(req.query.id) },
       {
         $set: updateBlock,

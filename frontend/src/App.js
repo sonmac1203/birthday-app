@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import Dates from './components/Dates';
+import Events from './components/Events';
 import Gallery from './components/Gallery';
 import Timer from './components/Timer';
 import Notes from './components/Notes';
@@ -10,7 +10,7 @@ function App() {
   return (
     <Container>
       <Timer startingDate={startingDate} />
-      <Dates />
+      <Events />
       <Gallery />
       <Notes />
     </Container>

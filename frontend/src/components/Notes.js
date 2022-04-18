@@ -13,14 +13,14 @@ const Notes = () => {
     })();
   }, []);
   return (
-    <div>
+    <section id='notes'>
       <h1>Notes & Sugars</h1>
       <Button onClick={() => setShowNoteModal(true)}>Add note</Button>
       <NoteModal show={showNoteModal} setShow={setShowNoteModal} />
       {noteList.length > 0 &&
         noteList.map((note, k) => <NoteItem note={note} key={k} />)}
       <ToastContainer />
-    </div>
+    </section>
   );
 };
 
