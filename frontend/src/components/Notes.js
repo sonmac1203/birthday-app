@@ -1,44 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Card, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Notes = () => {
   const [noteList, setNoteList] = useState([]);
+  const rowRef = useRef(null);
+  const [isMoved, setIsMoved] = useState(false);
+
+  const handleClick = (direction) => {
+    setIsMoved(true);
+    if (rowRef.current) {
+      const { scrollLeft, clientWidth } = rowRef.current;
+      const scrollTo =
+        direction === 'left'
+          ? scrollLeft - clientWidth
+          : scrollLeft + clientWidth;
+      rowRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+      console.log(clientWidth);
+    }
+  };
 
   useEffect(() => {
     (async () => {
       const response = await axios.get('http://localhost:3001/notes');
-      setNoteList(response.data);
+      setNoteList(
+        response.data.filter((note) => {
+          return !note.pinned;
+        })
+      );
     })();
   }, []);
   return (
-    <section id='notes'>
-      <h1>Notes & Sugars</h1>
-      <Row>
-        <Col md='6'>
+    <section id='notes' className='mt-5 mb-5'>
+      <Container className='d-flex flex-column justify-content-center'>
+        <i
+          className={`fa-solid fa-chevron-left ${!isMoved && 'hidden'} scroll`}
+          onClick={() => {
+            handleClick('left');
+          }}
+        />
+        <Row className='d-flex flex-row flex-nowrap overflow-auto' ref={rowRef}>
           {noteList.length > 0 &&
             noteList.map((note, k) => <NoteItem note={note} key={k} />)}
-        </Col>
-        <Col md='6'>
-          <NoteForm />
-        </Col>
-      </Row>
-
+        </Row>
+        <i
+          className='fa-solid fa-chevron-right align-self-end scroll'
+          onClick={() => {
+            handleClick('right');
+          }}
+        />
+      </Container>
       <ToastContainer />
     </section>
   );
 };
 
-const NoteItem = ({ note: { time, description } }) => {
+const NoteItem = ({ note: { date, description, _id } }) => {
+  const handlePin = async () => {
+    const params = {
+      params: {
+        id: _id,
+      },
+    };
+    await axios
+      .post('http://localhost:3001/pinNote', null, params)
+      .then((res) => {
+        toast.success(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      });
+  };
+
   return (
-    <Card>
-      <Card.Body>
-        <Card.Subtitle className='mb-2 text-muted'>{time}</Card.Subtitle>
-        <Card.Text>{description}</Card.Text>
-        <Button variant='primary'>Pin</Button>
-      </Card.Body>
-    </Card>
+    <Col md='3'>
+      <Card>
+        <Card.Body>
+          <div className='d-flex justify-content-between'>
+            <Card.Subtitle className='mb-2 text-muted'>{date}</Card.Subtitle>
+            <i
+              className='fa-solid fa-thumbtack'
+              style={{
+                fontSize: '17px',
+                cursor: 'pointer',
+              }}
+              onClick={handlePin}
+            />
+          </div>
+
+          <Card.Text>{description}</Card.Text>
+        </Card.Body>
+      </Card>
+    </Col>
   );
 };
 
@@ -69,7 +123,6 @@ const NoteForm = () => {
         <Form.Control
           as='textarea'
           placeholder='Enter description'
-          autoFocus
           onChange={(e) => {
             setDescription(e.target.value);
           }}
