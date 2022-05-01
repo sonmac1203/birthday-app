@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Row, Col, Card } from 'react-bootstrap';
+import {
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  Card,
+  Container,
+} from 'react-bootstrap';
 import { storage } from '../firebase/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
 import axios from 'axios';
@@ -16,37 +24,61 @@ const Gallery = () => {
   }, []);
   return (
     <section id='gallery'>
-      <h1>Gallery</h1>
-      <Button
-        onClick={() => {
-          setShowPhotoModal(true);
-        }}
-      >
-        Add photo
-      </Button>
-      <PhotoModal show={showPhotoModal} setShow={setShowPhotoModal} />
+      <Container>
+        <div className='d-flex justify-content-between align-items-end'>
+          <h1>Gallery</h1>
+          <h6
+            className='add-photo-button'
+            onClick={() => {
+              setShowPhotoModal(true);
+            }}
+          >
+            Add photo
+          </h6>
+        </div>
+        <PhotoModal show={showPhotoModal} setShow={setShowPhotoModal} />
 
-      <ToastContainer />
-      <Row>
-        {photos.length > 0 &&
-          photos.map((singlePhoto, key) => (
-            <PhotoItem photo={singlePhoto} key={key} />
-          ))}
-      </Row>
+        <ToastContainer />
+        <Row>
+          {photos.length > 0 &&
+            photos.map((singlePhoto, key) => (
+              <PhotoItem photo={singlePhoto} key={key} />
+            ))}
+        </Row>
+      </Container>
     </section>
   );
 };
 
-const PhotoItem = ({ photo: { url, description } }) => {
+const PhotoItem = ({ photo: { url, description, location, date }, key }) => {
   return (
     <Col md='3'>
-      <Card style={{ width: '18rem' }}>
-        <Card.Img variant='top' src={url} />
-        <Card.Body>
-          <Card.Text>{description}</Card.Text>
-          <Button variant='primary'>Go somewhere</Button>
-        </Card.Body>
-      </Card>
+      <div className='img-container'>
+        <img src={url} className='img' />
+        <div className='img-overlay d-flex flex-column align-items-center pt-2'>
+          <div>
+            <i className='fa-solid fa-location-dot me-2' />
+            {location}
+          </div>
+          <div>
+            <i className='fa-solid fa-calendar me-2' />
+            {date}
+          </div>
+        </div>
+      </div>
+
+      {/* <Card>
+ 
+        <Card.Img src={url} alt='Card image' />
+        <Card.ImgOverlay>
+          <Card.Title>Card title</Card.Title>
+          <Card.Text>
+            This is a wider card with supporting text below as a natural lead-in
+            to additional content. This content is a little bit longer.
+          </Card.Text>
+          <Card.Text>Last updated 3 mins ago</Card.Text>
+        </Card.ImgOverlay>
+      </Card> */}
     </Col>
   );
 };
