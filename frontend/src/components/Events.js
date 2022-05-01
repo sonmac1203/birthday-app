@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Card, FormGroup, Row, Col } from 'react-bootstrap';
+import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Calendar from 'react-calendar';
-import { isMobile } from 'react-device-detect';
 import { appendYear, isSameDay } from '../utils/CalendarHelpers';
+import { useMediaQuery } from 'react-responsive';
 
 const Events = () => {
   const [eventsObject, setEventsObject] = useState({});
@@ -26,34 +26,26 @@ const Events = () => {
   }, [refresh]);
 
   return (
-    <section id='events'>
-      <header className='d-flex align-items-center gap-3'>
-        <h1>Dates & Events</h1>
-        <i
-          className='fa-solid fa-calendar fs-4 cursor'
-          onClick={() => setSelectedType('calendar')}
-        />
-        <i
-          className='fa-solid fa-list fs-4 cursor'
-          onClick={() => setSelectedType('list')}
-        />
-      </header>
-      <div className={selectedType !== 'calendar' ? 'hidden' : ''}>
-        <CalendarModule
-          eventsObject={eventsObject}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
-      </div>
-      <div className={selectedType !== 'list' ? 'hidden' : ''}>
-        <ListCards events={events} />
-      </div>
+    <section id='events' className='mt-5'>
+      <Container>
+        <Row>
+          <CalendarModule
+            eventsObject={eventsObject}
+            refresh={refresh}
+            setRefresh={setRefresh}
+          />
+          <Col md='4' className='d-flex flex-column flex-nowrap overflow-auto'>
+            <ListCards events={events} />
+          </Col>
+        </Row>
+      </Container>
       <ToastContainer />
     </section>
   );
 };
 
 const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
+  const isSmallDevice = useMediaQuery({ query: `(max-width: 1200px)` });
   const [disabled, setDisabled] = useState(false);
   const defaultObj = {
     name: 'unknown',
@@ -79,7 +71,7 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
       view === 'month' &&
       highlightedDays.find((dDate) => isSameDay(dDate, date))
     ) {
-      return ['highlight', 'background'];
+      return ['highlight'];
     }
   };
   const onClickDay = (value, e) => {
@@ -93,8 +85,8 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
   };
 
   return (
-    <Row>
-      <Col md='6'>
+    <React.Fragment>
+      <Col md='4'>
         <Calendar
           onChange={(val) => {
             setValue(val);
@@ -102,21 +94,18 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
           value={value}
           tileClassName={tileClassName}
           onClickDay={onClickDay}
-          showDoubleView={!isMobile}
-          className={`${isMobile ? 'full-width-display ' : ''}${
-            disabled ? 'disabled' : ''
-          }`}
+          className={`${disabled ? 'disabled' : ''}`}
         />
       </Col>
 
-      <Col md='6'>
+      <Col md='4'>
         <CalendarCard
           selectedDay={selectedDay}
           selectedObj={selectedObj}
           setDisabled={setDisabled}
         />
       </Col>
-    </Row>
+    </React.Fragment>
   );
 };
 
@@ -179,7 +168,7 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
   };
 
   return (
-    <Card>
+    <Card style={{ height: !editMode ? '270px' : '' }}>
       <Card.Body>
         <Card.Title>
           {!editMode ? (
@@ -270,7 +259,7 @@ const ListCards = ({ events }) => {
   return (
     events.length > 0 &&
     events.map((e, k) => (
-      <Card key={k}>
+      <Card key={k} className='mb-2'>
         <Card.Body>
           <Card.Title>{e.name}</Card.Title>
           <Card.Subtitle className='mb-2 text-muted'>{e.time}</Card.Subtitle>
