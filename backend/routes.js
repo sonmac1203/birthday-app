@@ -108,4 +108,32 @@ router.post('/createNote', async (req, res) => {
   }
 });
 
+router.post('/pinNote', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('notes').updateOne(
+      {
+        pinned: true,
+      },
+      {
+        $set: {
+          pinned: false,
+        },
+      }
+    );
+    dbConnect.collection('notes').updateOne(
+      { _id: ObjectId(req.query.id) },
+      {
+        $set: {
+          pinned: true,
+        },
+      }
+    );
+    res.status(200).send('Successfully pin the note');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
 module.exports = router;
