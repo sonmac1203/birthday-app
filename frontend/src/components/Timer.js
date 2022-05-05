@@ -69,7 +69,7 @@ const TimerBox = ({ time }) => {
 
 const Digit = ({ digit, unit }) => (
   <div className='d-flex flex-column justify-content-center px-2'>
-    <div className='flip-digit-container'>
+    <div className='flip-digit-container mb-2'>
       <FlipNumbers
         play
         background='white'

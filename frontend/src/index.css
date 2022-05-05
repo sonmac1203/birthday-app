@@ -1,10 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&family=PT+Sans+Narrow:wght@700&display=swap');
 body {
   background-color: #f9f4e1;
+  font-family: 'Josefin Sans', sans-serif;
 }
+
 @media screen and (min-width: 992px) {
   .container {
     padding: 0 10vh;
   }
+}
+
+p {
+  font-size: 16.5px;
+}
+
+.card {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
+  border-radius: 7px;
 }
 
 #timer {
@@ -35,16 +48,22 @@ body {
   padding: 1rem 0.5rem;
   border-radius: 5px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  font-family: 'PT Sans Narrow', sans-serif;
 }
 
 .react-calendar {
   width: 100%;
+  font-family: 'Josefin Sans', sans-serif;
 }
 
-.react-calendar,
-#events .card {
+.react-calendar abbr[title] {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.react-calendar {
   border: none;
-  border-radius: 10px;
+  border-radius: 7px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
@@ -210,6 +229,7 @@ h1.title {
   text-align: center;
   margin-bottom: 4rem;
   margin-top: 4.5rem;
+  padding-bottom: 0.5rem;
 }
 
 h1.title:before,
