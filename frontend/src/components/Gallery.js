@@ -25,15 +25,16 @@ const Gallery = () => {
   return (
     <section id='gallery'>
       <Container>
-        <h1 className='title'>Gallery</h1>
-        <h6
-          className='underline-button text-end'
-          onClick={() => {
-            setShowPhotoModal(true);
-          }}
-        >
-          Add photo
-        </h6>
+        <h1 className='title'>&#128247; Gallery</h1>
+        <div className='d-flex align-items-center mb-3'>
+          <i className='fa-solid fa-circle-plus me-2' />
+          <h6
+            className='underline-button mb-0'
+            onClick={() => setShowPhotoModal(true)}
+          >
+            Add new photo
+          </h6>
+        </div>
 
         <PhotoModal show={showPhotoModal} setShow={setShowPhotoModal} />
 
@@ -65,19 +66,6 @@ const PhotoItem = ({ photo: { url, description, location, date } }) => {
           </div>
         </div>
       </div>
-
-      {/* <Card>
- 
-        <Card.Img src={url} alt='Card image' />
-        <Card.ImgOverlay>
-          <Card.Title>Card title</Card.Title>
-          <Card.Text>
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.
-          </Card.Text>
-          <Card.Text>Last updated 3 mins ago</Card.Text>
-        </Card.ImgOverlay>
-      </Card> */}
     </Col>
   );
 };

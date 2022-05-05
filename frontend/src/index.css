@@ -20,6 +20,36 @@ p {
   border-radius: 7px;
 }
 
+.btn.btn-primary,
+.btn.btn.btn-secondary {
+  border: none;
+}
+
+.btn.btn-primary:focus,
+.btn.btn-secondary:focus {
+  box-shadow: none;
+}
+
+.btn.btn-primary {
+  background-color: #f2b898;
+}
+
+.btn.btn.btn-secondary {
+  background-color: #b2aa9b;
+}
+
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-select:focus {
+  box-shadow: none;
+  border-color: grey;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
 #timer {
   min-height: 75vh;
 }
@@ -161,16 +191,6 @@ input.form-control.note-modal-title {
 input.form-control.note-modal-title,
 textarea.form-control.note-modal-description {
   border: none;
-}
-
-input.form-control.note-modal-title:focus,
-textarea.form-control.note-modal-description:focus {
-  box-shadow: none;
-}
-
-input.note-modal-title:focus-visible,
-textarea.note-modal-description:focus-visible {
-  outline: none;
 }
 
 textarea.note-modal-description {

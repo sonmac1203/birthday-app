@@ -45,7 +45,7 @@ const Notes = () => {
   return (
     <section id='notes'>
       <Container>
-        <h1 className='title'>Notes & Sugars</h1>
+        <h1 className='title'>&#128221; Notes & Sugars &#129392; </h1>
         <div className='d-flex align-items-center mb-3'>
           <i className='fa-solid fa-circle-plus me-2' />
           <h6 className='underline-button mb-0' onClick={handleShowForm}>

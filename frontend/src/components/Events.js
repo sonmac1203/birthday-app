@@ -28,7 +28,7 @@ const Events = () => {
   return (
     <section id='events' className='d-flex flex-column justify-content-around'>
       <Container>
-        <h1 className='title'>Dates & Events</h1>
+        <h1 className='title'>Dates & Events &#128467;&#65039;</h1>
         <Row>
           <CalendarModule
             eventsObject={eventsObject}
