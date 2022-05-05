@@ -30,7 +30,7 @@ const Timer = ({ startingDate }) => {
   return (
     <section id='timer'>
       <Container>
-        <TimerBox time={time} />
+        {/* <TimerBox time={time} /> */}
         {pinnedNote && (
           <Row className='mt-5'>
             <Col md='3'>

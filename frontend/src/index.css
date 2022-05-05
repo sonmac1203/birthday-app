@@ -55,7 +55,7 @@ textarea:focus-visible {
 }
 
 #footer {
-  background-color: red;
+  background-color: #f2b898;
   margin-top: 4rem;
   text-align: center;
   bottom: 0;
@@ -63,6 +63,7 @@ textarea:focus-visible {
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  font-size: 20px;
 }
 
 .cursor {
@@ -233,7 +234,8 @@ textarea.note #gallery .col-md-3 {
   padding: 1px 1px;
 }
 
-#gallery .col-md-3 {
+#gallery .col-md-3,
+.col-xs-4 {
   padding: 2px 2px;
 }
 

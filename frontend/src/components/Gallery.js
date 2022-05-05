@@ -55,7 +55,7 @@ const PhotoItem = ({ photo: { url, description, location, date } }) => {
   const [showPhotoDetail, setShowPhotoDetail] = useState(false);
   return (
     <>
-      <Col md='3'>
+      <Col md='3' xs='4'>
         <div
           className='img-container'
           style={{ cursor: 'pointer' }}
@@ -163,7 +163,13 @@ const PhotoModal = ({ show, setShow }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size='md' backdrop='static'>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size='md'
+      backdrop='static'
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title>Add a photo</Modal.Title>
       </Modal.Header>
