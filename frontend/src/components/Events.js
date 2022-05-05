@@ -24,6 +24,7 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [selectedType, setSelectedType] = useState('calendar');
   const [refresh, setRefresh] = useState(false);
+  const isSmallDevice = useMediaQuery({ query: `(max-width: 768px)` });
 
   useEffect(() => {
     (async () => {
@@ -42,15 +43,41 @@ const Events = () => {
     <section id='events' className='d-flex flex-column justify-content-around'>
       <Container>
         <h1 className='title'>Dates & Events &#128467;&#65039;</h1>
+        {isSmallDevice && (
+          <div className='d-flex align-items-center mb-3'>
+            <i
+              style={{
+                fontSize: selectedType === 'calendar' ? '20px' : '',
+              }}
+              className='fa-solid fa-calendar-days me-2'
+              onClick={() => setSelectedType('calendar')}
+            />
+            <i
+              style={{
+                fontSize: selectedType === 'list' ? '20px' : '',
+              }}
+              className='fa-solid fa-list'
+              onClick={() => setSelectedType('list')}
+            />
+          </div>
+        )}
         <Row>
-          <CalendarModule
-            eventsObject={eventsObject}
-            refresh={refresh}
-            setRefresh={setRefresh}
-          />
-          <Col md='4' className='d-flex flex-column flex-nowrap overflow-auto'>
-            <ListCards events={events} />
-          </Col>
+          {((isSmallDevice && selectedType === 'calendar') ||
+            !isSmallDevice) && (
+            <CalendarModule
+              eventsObject={eventsObject}
+              refresh={refresh}
+              setRefresh={setRefresh}
+            />
+          )}
+          {((isSmallDevice && selectedType === 'list') || !isSmallDevice) && (
+            <Col
+              md='4'
+              className='d-flex flex-column flex-nowrap overflow-auto'
+            >
+              <ListCards events={events} />
+            </Col>
+          )}
         </Row>
       </Container>
       <ToastContainer />
@@ -59,7 +86,6 @@ const Events = () => {
 };
 
 const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
-  const isSmallDevice = useMediaQuery({ query: `(max-width: 1200px)` });
   const [disabled, setDisabled] = useState(false);
   const defaultObj = {
     name: 'unknown',
@@ -165,7 +191,7 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
 
   return (
     <React.Fragment>
-      <Col md='4'>
+      <Col md='4' xs='12'>
         <Calendar
           onChange={(val) => {
             setValue(val);
@@ -177,8 +203,7 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
           className={`${disabled ? 'disabled' : ''}`}
         />
       </Col>
-
-      <Col md='4'>
+      <Col md='4' xs='12'>
         <CalendarCard
           selectedDay={selectedDay}
           selectedObj={selectedObj}
@@ -248,7 +273,12 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
   };
 
   return (
-    <Card style={{ height: !editMode ? '270px' : '', position: 'relative' }}>
+    <Card
+      style={{
+        height: !editMode ? '270px' : '',
+        position: 'relative',
+      }}
+    >
       <Card.Body>
         <Card.Title>
           {!editMode ? (
