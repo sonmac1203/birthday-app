@@ -4,6 +4,7 @@ import Events from './components/Events';
 import Gallery from './components/Gallery';
 import Timer from './components/Timer';
 import Notes from './components/Notes';
+import Footer from './components/Footer';
 
 function App() {
   const startingDate = 1636011960;
@@ -18,6 +19,7 @@ function App() {
       <Events />
       <Notes />
       <Gallery />
+      <Footer />
     </React.Fragment>
   );
 }
