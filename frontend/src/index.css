@@ -10,6 +10,33 @@ body {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .react-calendar {
+    margin-bottom: 2rem;
+  }
+
+  #events .col-md-4 {
+    max-height: 470px;
+  }
+
+  #footer {
+    font-size: 15px !important;
+  }
+
+  #timer {
+    position: relative;
+    background-image: url('./assets/test4.jpeg') !important;
+    justify-content: start !important;
+  }
+
+  #timer .card {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: 1rem;
+  }
+}
+
 p {
   font-size: 16.5px;
 }
@@ -77,9 +104,10 @@ textarea:focus-visible {
 #timer .flip-digit-container {
   background-color: white;
   padding: 1rem 0.5rem;
+  border: 1px solid black;
   border-radius: 5px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   font-family: 'PT Sans Narrow', sans-serif;
+  color: red !important;
 }
 
 .react-calendar {
@@ -154,8 +182,13 @@ textarea:focus-visible {
   justify-content: center;
 }
 
-#events .col-md-4 {
-  height: 270px;
+@media screen and (min-width: 768px) {
+  #events .col-md-4 {
+    height: 270px;
+  }
+  #notes h1.title {
+    margin-top: 7rem;
+  }
 }
 
 #events .col-md-4 {

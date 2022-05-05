@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Container, Card, Button } from 'react-bootstrap';
+import { Row, Col, Container, Card } from 'react-bootstrap';
 import FlipNumbers from 'react-flip-numbers';
 import axios from 'axios';
+import { useMediaQuery } from 'react-responsive';
 
 const Timer = ({ startingDate }) => {
+  const isSmallDevice = useMediaQuery({ query: `(max-width: 768px)` });
   const [time, setTime] = useState(
     () => Math.floor(new Date().getTime() / 1000) - startingDate
   );
@@ -29,8 +31,10 @@ const Timer = ({ startingDate }) => {
   }, [startingDate]);
   return (
     <section id='timer'>
-      <Container>
-        {/* <TimerBox time={time} /> */}
+      <Container
+        className={isSmallDevice ? 'd-flex justify-content-center mt-5' : ''}
+      >
+        <TimerBox time={time} />
         {pinnedNote && (
           <Row className='mt-5'>
             <Col md='3'>
@@ -67,20 +71,24 @@ const TimerBox = ({ time }) => {
   );
 };
 
-const Digit = ({ digit, unit }) => (
-  <div className='d-flex flex-column justify-content-center px-2'>
-    <div className='flip-digit-container mb-2'>
-      <FlipNumbers
-        play
-        background='white'
-        color='black'
-        width={60}
-        height={70}
-        numbers={digit <= 9 ? `0${digit}` : `${digit}`}
-      />
+const Digit = ({ digit, unit }) => {
+  const isSmallDevice = useMediaQuery({ query: `(max-width: 768px)` });
+
+  return (
+    <div className='d-flex flex-column justify-content-center px-2'>
+      <div className='flip-digit-container mb-2'>
+        <FlipNumbers
+          play
+          background='white'
+          color='black'
+          width={!isSmallDevice ? 60 : 25}
+          height={!isSmallDevice ? 70 : 40}
+          numbers={digit <= 9 ? `0${digit}` : `${digit}`}
+        />
+      </div>
+      {unit.toUpperCase()}
     </div>
-    {unit.toUpperCase()}
-  </div>
-);
+  );
+};
 
 export default Timer;
