@@ -97,11 +97,12 @@ router.post('/createNote', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('notes').insertOne({
+      title: req.query.title,
       description: req.query.description,
       date: req.query.date,
       pinned: false,
     });
-    res.status(200).send('Successfully create a new date!');
+    res.status(200).send('Successfully create a new note!');
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
@@ -130,6 +131,17 @@ router.post('/pinNote', async (req, res) => {
       }
     );
     res.status(200).send('Successfully pin the note');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
+router.delete('/deleteNote', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('notes').deleteOne({ _id: ObjectId(req.query.id) });
+    res.status(200).send('Successfully delete the note');
   } catch (err) {
     console.log(err);
     res.status(500).send('A database error has occured');
