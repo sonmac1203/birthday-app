@@ -239,9 +239,12 @@ textarea.note #gallery .col-md-3 {
 
 #gallery .col-md-3 .img-container {
   position: relative;
+  border: 1px solid black;
+  border-radius: 7px;
 }
 
 #gallery .col-md-3 img {
+  border-radius: 7px;
   width: 100%;
   object-fit: cover;
   object-position: center;
@@ -253,6 +256,7 @@ textarea.note #gallery .col-md-3 {
 }
 
 #gallery .col-md-3 .img-overlay {
+  border-radius: 7px;
   opacity: 0;
   top: 0;
   left: 0;
@@ -261,6 +265,22 @@ textarea.note #gallery .col-md-3 {
   height: 100%;
   background: linear-gradient(to top, transparent 0%, black 100%);
   position: absolute;
+}
+
+.modal-img-detail {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: solid 1px black;
+}
+
+.img-fluid.img-detail {
+  max-height: 75vh;
+  object-fit: cover;
+}
+
+.modal-img-detail .modal-footer {
+  border-top: none;
 }
 
 .underline-button {

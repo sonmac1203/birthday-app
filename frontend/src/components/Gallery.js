@@ -7,6 +7,7 @@ import {
   Col,
   Card,
   Container,
+  Image,
 } from 'react-bootstrap';
 import { storage } from '../firebase/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
@@ -51,22 +52,55 @@ const Gallery = () => {
 };
 
 const PhotoItem = ({ photo: { url, description, location, date } }) => {
+  const [showPhotoDetail, setShowPhotoDetail] = useState(false);
   return (
-    <Col md='3'>
-      <div className='img-container'>
-        <img src={url} className='img' />
-        <div className='img-overlay d-flex flex-column align-items-center pt-2'>
-          <div>
-            <i className='fa-solid fa-location-dot me-2' />
-            {location}
-          </div>
-          <div>
-            <i className='fa-solid fa-calendar me-2' />
-            {date}
+    <>
+      <Col md='3'>
+        <div
+          className='img-container'
+          style={{ cursor: 'pointer' }}
+          onClick={() => setShowPhotoDetail(true)}
+        >
+          <img src={url} />
+          <div className='img-overlay d-flex flex-column align-items-center pt-2'>
+            <div>
+              <i className='fa-solid fa-location-dot me-2' />
+              {location}
+            </div>
+            <div>
+              <i className='fa-solid fa-calendar me-2' />
+              {date}
+            </div>
           </div>
         </div>
-      </div>
-    </Col>
+      </Col>
+      <PhotoDetail
+        show={showPhotoDetail}
+        setShow={setShowPhotoDetail}
+        url={url}
+        description={description}
+        location={location}
+        date={date}
+      />
+    </>
+  );
+};
+
+const PhotoDetail = ({ url, description, show, setShow }) => {
+  const handleClose = () => setShow(false);
+  return (
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      size='md'
+      contentClassName='modal-img-detail'
+    >
+      <Image src={url} className='img-detail' fluid />
+      <Modal.Footer className='justify-content-start'>
+        {description}
+      </Modal.Footer>
+    </Modal>
   );
 };
 
