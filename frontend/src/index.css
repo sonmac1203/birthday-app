@@ -21,7 +21,8 @@ p {
 
 .btn.btn-primary,
 .btn.btn.btn-secondary {
-  border: none;
+  border: 1px solid black;
+  color: black;
 }
 
 .btn.btn-primary:focus,

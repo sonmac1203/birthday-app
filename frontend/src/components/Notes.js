@@ -175,7 +175,7 @@ const NoteModal = ({ show, setShow }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} centered>
       <Modal.Body>
         <Form>
           <Form.Control
