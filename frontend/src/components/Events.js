@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
+import {
+  Button,
+  Form,
+  Card,
+  Row,
+  Col,
+  Container,
+  Badge,
+} from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Calendar from 'react-calendar';
 import { appendYear, isSameDay } from '../utils/CalendarHelpers';
 import { useMediaQuery } from 'react-responsive';
+
+const anniversaryColor = '#F29496';
+const birthdayColor = '#7985E0';
+const tripColor = '#76CE86';
+const uncategorizedColor = '#D4B1AA';
 
 const Events = () => {
   const [eventsObject, setEventsObject] = useState({});
@@ -60,21 +73,86 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
   );
   const [selectedObj, setSelectedObj] = useState(defaultObj);
   const highlightedDays = Object.keys(eventsObject).map((key) => {
-    let dayObj = eventsObject[key];
+    const dayObj = eventsObject[key];
+    const returnedObj = {
+      tag: dayObj.tag,
+    };
     if (dayObj.tag === 'birthday' || dayObj.tag === 'anniversary') {
-      return new Date(appendYear(key));
+      returnedObj['date'] = new Date(appendYear(key));
+    } else {
+      returnedObj['date'] = new Date(key);
     }
-    return new Date(key);
+    return returnedObj;
   });
 
   const tileClassName = ({ date, view }) => {
     if (
       view === 'month' &&
-      highlightedDays.find((dDate) => isSameDay(dDate, date))
+      highlightedDays.find((dDate) => isSameDay(dDate.date, date))
     ) {
-      return ['highlight'];
+      return ['positionRel'];
     }
   };
+
+  const tileContent = ({ date, view }) => {
+    if (view === 'month') {
+      const dayObj = highlightedDays.find((dDate) =>
+        isSameDay(dDate.date, date)
+      );
+      if (dayObj) {
+        if (dayObj.tag === 'anniversary') {
+          return (
+            <svg
+              width='6.5'
+              height='6.5'
+              viewBox='0 0 10 10'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <circle cx='5' cy='5' r='5.5' fill={anniversaryColor} />
+            </svg>
+          );
+        } else if (dayObj.tag === 'birthday') {
+          return (
+            <svg
+              width='6.5'
+              height='6.5'
+              viewBox='0 0 10 10'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <circle cx='5' cy='5' r='5.5' fill={birthdayColor} />
+            </svg>
+          );
+        } else if (dayObj.tag === 'trip') {
+          return (
+            <svg
+              width='6.5'
+              height='6.5'
+              viewBox='0 0 10 10'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <circle cx='5' cy='5' r='5.5' fill={tripColor} />
+            </svg>
+          );
+        } else if (dayObj.tag === 'uncategorized') {
+          return (
+            <svg
+              width='6.5'
+              height='6.5'
+              viewBox='0 0 10 10'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <circle cx='5' cy='5' r='5.5' fill={uncategorizedColor} />
+            </svg>
+          );
+        }
+      }
+    }
+  };
+
   const onClickDay = (value, e) => {
     const formattedVal = value.toLocaleDateString();
     setSelectedDay(formattedVal);
@@ -94,6 +172,7 @@ const CalendarModule = ({ eventsObject, refresh, setRefresh }) => {
           }}
           value={value}
           tileClassName={tileClassName}
+          tileContent={tileContent}
           onClickDay={onClickDay}
           className={`${disabled ? 'disabled' : ''}`}
         />
@@ -169,13 +248,14 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
   };
 
   return (
-    <Card style={{ height: !editMode ? '270px' : '' }}>
+    <Card style={{ height: !editMode ? '270px' : '', position: 'relative' }}>
       <Card.Body>
         <Card.Title>
           {!editMode ? (
             <div className='d-flex justify-content-between'>
               {selectedObj.name}
               <i
+                style={{ fontSize: '20px', cursor: 'pointer' }}
                 className={`fa-solid ${
                   selectedObj.added ? 'fa-pen' : 'fa-plus'
                 }`}
@@ -234,6 +314,23 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
             </Form.Select>
           </Form.Group>
         )}
+        {!editMode && selectedObj.added && (
+          <div
+            className='event-tag-badge py-1 px-2'
+            style={{
+              backgroundColor:
+                selectedObj.tag === 'anniversary'
+                  ? anniversaryColor
+                  : selectedObj.tag === 'birthday'
+                  ? birthdayColor
+                  : selectedObj.tag === 'trip'
+                  ? tripColor
+                  : uncategorizedColor,
+            }}
+          >
+            #{selectedObj.tag}
+          </div>
+        )}
         {editMode && (
           <div className='mt-3'>
             <Button
@@ -260,11 +357,23 @@ const ListCards = ({ events }) => {
   return (
     events.length > 0 &&
     events.map((e, k) => (
-      <Card key={k} className='mb-2'>
+      <Card
+        key={k}
+        className='mb-2'
+        style={{
+          borderColor:
+            e.tag === 'anniversary'
+              ? anniversaryColor
+              : e.tag === 'birthday'
+              ? birthdayColor
+              : e.tag === 'trip'
+              ? tripColor
+              : uncategorizedColor,
+        }}
+      >
         <Card.Body>
-          <Card.Title>{e.name}</Card.Title>
-          <Card.Subtitle className='mb-2 text-muted'>{e.time}</Card.Subtitle>
-          <Card.Text>{e.description}</Card.Text>
+          <Card.Text className='mb-1'>{e.date}</Card.Text>
+          <Card.Title className='mb-1'>{e.name}</Card.Title>
         </Card.Body>
       </Card>
     ))
