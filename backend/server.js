@@ -8,6 +8,14 @@ app.use(express.json({ extended: false }));
 const mainRoutes = require('./routes');
 const dbo = require('./mongoClient');
 app.use(mainRoutes);
+const path = require('path');
+
+// Step 1:
+app.use(express.static(path.resolve(__dirname, './frontend/build')));
+// Step 2:
+app.get('*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, './frontend/build', 'index.html'));
+});
 
 app.get('/', (req, res) => {
   return res.status(200).json({ msg: 'API connected' });
