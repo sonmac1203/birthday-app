@@ -32,14 +32,15 @@ const Timer = ({ startingDate }) => {
       <Container>
         <TimerBox time={time} />
         {pinnedNote && (
-          <Row>
+          <Row className='mt-5'>
             <Col md='3'>
               <Card>
                 <Card.Body>
-                  <Card.Subtitle className='mb-2 text-muted'>
-                    {pinnedNote.date}
-                  </Card.Subtitle>
-                  <Card.Text>{pinnedNote.description}</Card.Text>
+                  <h3>{pinnedNote.title}</h3>
+                  <Card.Text
+                    className='mt-3'
+                    dangerouslySetInnerHTML={{ __html: pinnedNote.description }}
+                  ></Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -57,27 +58,29 @@ const TimerBox = ({ time }) => {
   var s = Math.floor(time % 60);
 
   return (
-    <Row>
-      <Col md='6'>
-        <div className='card'>
-          <div className='card-body'>
-            <div className='card-title'>It has been ...</div>
-            <div className='card-text'>
-              <h2>
-                {d} days <br />
-                {h}
-                {h <= 1 ? ' hour' : ' hours'} <br />
-                {m}
-                {m <= 1 ? ' minute' : ' minutes'} <br />
-                {s}
-                {s <= 1 ? ' second' : ' seconds'}
-              </h2>
-            </div>
-          </div>
-        </div>
-      </Col>
-    </Row>
+    <div className='d-flex'>
+      <Digit digit={d} unit='Days' />
+      <Digit digit={h} unit='Hours' />
+      <Digit digit={m} unit='Minutes' />
+      <Digit digit={s} unit='Seconds' />
+    </div>
   );
 };
+
+const Digit = ({ digit, unit }) => (
+  <div className='d-flex flex-column justify-content-center px-2'>
+    <div className='flip-digit-container'>
+      <FlipNumbers
+        play
+        background='white'
+        color='black'
+        width={60}
+        height={70}
+        numbers={digit <= 9 ? `0${digit}` : `${digit}`}
+      />
+    </div>
+    {unit.toUpperCase()}
+  </div>
+);
 
 export default Timer;

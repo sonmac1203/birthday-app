@@ -30,6 +30,13 @@ body {
   display: none;
 }
 
+#timer .flip-digit-container {
+  background-color: white;
+  padding: 1rem 0.5rem;
+  border-radius: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
 .react-calendar {
   width: 100%;
 }
@@ -82,7 +89,8 @@ body {
   background-size: cover;
   background-position: bottom right;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #events .col-md-4 {
