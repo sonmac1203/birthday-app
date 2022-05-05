@@ -61,19 +61,18 @@ body {
   /* background: #d9e5ae; */
 }
 
-/* section#timer,
-#dates,
+#timer,
+#events,
 #gallery,
 #notes {
-  padding: 5vh;
-} */
+  min-height: 75vh;
+}
 
 #timer {
   background-image: url('./assets/test3.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: bottom right;
-  min-height: 75vh;
   display: flex;
   align-items: center;
 }
@@ -89,6 +88,10 @@ body {
 
 #events .col-md-4::-webkit-scrollbar {
   display: none;
+}
+
+#notes .card {
+  font-size: 25px;
 }
 
 #notes .row {
@@ -108,23 +111,53 @@ body {
   opacity: 0;
 }
 
-#notes .container:hover i.scroll {
+#notes .notes-container:hover i.scroll {
   opacity: 100%;
 }
 
-#gallery .col-md-3 {
+#notes .card {
+  height: 250px;
+}
+
+input.form-control.note-modal-title {
+  font-size: 2rem;
+}
+
+input.form-control.note-modal-title,
+textarea.form-control.note-modal-description {
+  border: none;
+}
+
+input.form-control.note-modal-title:focus,
+textarea.form-control.note-modal-description:focus {
+  box-shadow: none;
+}
+
+input.note-modal-title:focus-visible,
+textarea.note-modal-description:focus-visible {
+  outline: none;
+}
+
+textarea.note-modal-description {
+  white-space: pre-line;
+}
+
+#notes .card p {
+  font-size: 17px;
+  opacity: 80%;
+}
+
+textarea.note #gallery .col-md-3 {
   padding: 1px 1px;
+}
+
+#gallery .col-md-3 {
+  padding: 2px 2px;
 }
 
 #gallery .col-md-3 .img-container {
   position: relative;
 }
-
-/* #gallery .col-md-3::after {
-  content: '';
-  display: block;
-  padding-bottom: 100%;
-} */
 
 #gallery .col-md-3 img {
   width: 100%;
@@ -148,10 +181,37 @@ body {
   position: absolute;
 }
 
-#gallery .add-photo-button {
+.underline-button {
   cursor: pointer;
 }
 
-#gallery .add-photo-button:hover {
+.underline-button:hover {
   text-decoration: underline;
+}
+
+h1.title {
+  overflow: hidden;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+h1.title:before,
+h1.title:after {
+  background-color: #000;
+  content: '';
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+h1.title:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+h1.title:after {
+  left: 0.5em;
+  margin-right: -50%;
 }

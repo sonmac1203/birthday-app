@@ -26,8 +26,9 @@ const Events = () => {
   }, [refresh]);
 
   return (
-    <section id='events' className='mt-5'>
+    <section id='events' className='d-flex flex-column justify-content-around'>
       <Container>
+        <h1 className='title'>Dates & Events</h1>
         <Row>
           <CalendarModule
             eventsObject={eventsObject}

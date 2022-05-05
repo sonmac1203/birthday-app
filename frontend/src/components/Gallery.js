@@ -25,17 +25,16 @@ const Gallery = () => {
   return (
     <section id='gallery'>
       <Container>
-        <div className='d-flex justify-content-between align-items-end'>
-          <h1>Gallery</h1>
-          <h6
-            className='add-photo-button'
-            onClick={() => {
-              setShowPhotoModal(true);
-            }}
-          >
-            Add photo
-          </h6>
-        </div>
+        <h1 className='title'>Gallery</h1>
+        <h6
+          className='underline-button text-end'
+          onClick={() => {
+            setShowPhotoModal(true);
+          }}
+        >
+          Add photo
+        </h6>
+
         <PhotoModal show={showPhotoModal} setShow={setShowPhotoModal} />
 
         <ToastContainer />
@@ -50,7 +49,7 @@ const Gallery = () => {
   );
 };
 
-const PhotoItem = ({ photo: { url, description, location, date }, key }) => {
+const PhotoItem = ({ photo: { url, description, location, date } }) => {
   return (
     <Col md='3'>
       <div className='img-container'>
