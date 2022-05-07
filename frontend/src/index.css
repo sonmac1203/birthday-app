@@ -25,7 +25,7 @@ body {
 
   #timer {
     position: relative;
-    background-image: url('./assets/test4.jpeg') !important;
+    background-image: url('./assets/phone_background.jpeg') !important;
     justify-content: start !important;
   }
 
@@ -173,7 +173,7 @@ textarea:focus-visible {
 }
 
 #timer {
-  background-image: url('./assets/test3.jpg');
+  background-image: url('./assets/web_background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: bottom right;
