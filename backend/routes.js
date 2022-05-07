@@ -4,7 +4,7 @@ const mongoClient = require('./mongoClient');
 const ObjectId = require('mongodb').ObjectId;
 const databaseName = 'birthday-project';
 
-router.get('/events', async (req, res) => {
+router.get('/api/events', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     const events = await dbConnect.collection('events').find({}).toArray();
@@ -15,7 +15,7 @@ router.get('/events', async (req, res) => {
   }
 });
 
-router.post('/createEvent', async (req, res) => {
+router.post('/api/createEvent', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('events').insertOne({
@@ -32,7 +32,7 @@ router.post('/createEvent', async (req, res) => {
   }
 });
 
-router.post('/updateEvent', async (req, res) => {
+router.post('/api/updateEvent', async (req, res) => {
   try {
     let updateBlock = {};
     if (req.query.name) {
@@ -55,7 +55,7 @@ router.post('/updateEvent', async (req, res) => {
   }
 });
 
-router.post('/addPhoto', async (req, res) => {
+router.post('/api/addPhoto', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('gallery').insertOne({
@@ -71,7 +71,7 @@ router.post('/addPhoto', async (req, res) => {
   }
 });
 
-router.get('/gallery', async (req, res) => {
+router.get('/api/gallery', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     const photos = await dbConnect.collection('gallery').find({}).toArray();
@@ -82,7 +82,7 @@ router.get('/gallery', async (req, res) => {
   }
 });
 
-router.get('/notes', async (req, res) => {
+router.get('/api/notes', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     const notes = await dbConnect.collection('notes').find({}).toArray();
@@ -93,7 +93,7 @@ router.get('/notes', async (req, res) => {
   }
 });
 
-router.post('/createNote', async (req, res) => {
+router.post('/api/createNote', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('notes').insertOne({
@@ -109,7 +109,7 @@ router.post('/createNote', async (req, res) => {
   }
 });
 
-router.post('/pinNote', async (req, res) => {
+router.post('/api/pinNote', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('notes').updateOne(
@@ -137,7 +137,7 @@ router.post('/pinNote', async (req, res) => {
   }
 });
 
-router.delete('/deleteNote', async (req, res) => {
+router.delete('/api/deleteNote', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
     dbConnect.collection('notes').deleteOne({ _id: ObjectId(req.query.id) });
