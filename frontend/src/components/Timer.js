@@ -13,7 +13,7 @@ const Timer = ({ startingDate }) => {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get('http://localhost:3001/notes');
+      const response = await axios.get('/notes');
       for (const note of response.data) {
         if (note.pinned) {
           setPinnedNote(note);

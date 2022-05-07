@@ -19,7 +19,7 @@ const Gallery = () => {
   const [photos, setPhotos] = useState([]);
   useEffect(() => {
     (async () => {
-      const response = await axios.get('http://localhost:3001/gallery');
+      const response = await axios.get('/gallery');
       setPhotos(response.data);
     })();
   }, []);
@@ -151,7 +151,7 @@ const PhotoModal = ({ show, setShow }) => {
       },
     };
     await axios
-      .post('http://localhost:3001/addPhoto', null, params)
+      .post('/addPhoto', null, params)
       .then((res) => {
         toast.success(res.data);
         handleClose();

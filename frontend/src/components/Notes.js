@@ -34,7 +34,7 @@ const Notes = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get('http://localhost:3001/notes');
+      const response = await axios.get('/notes');
       setNoteList(
         response.data.filter((note) => {
           return !note.pinned;
@@ -92,7 +92,7 @@ const NoteItem = ({ note: { date, description, _id, title } }) => {
       },
     };
     await axios
-      .post('http://localhost:3001/pinNote', null, params)
+      .post('/pinNote', null, params)
       .then((res) => {
         toast.success(res.data);
       })
@@ -108,7 +108,7 @@ const NoteItem = ({ note: { date, description, _id, title } }) => {
       },
     };
     await axios
-      .delete('http://localhost:3001/deleteNote', params)
+      .delete('/deleteNote', params)
       .then((res) => {
         toast.success(res.data);
       })
@@ -165,7 +165,7 @@ const NoteModal = ({ show, setShow }) => {
       },
     };
     await axios
-      .post('http://localhost:3001/createNote', null, params)
+      .post('/createNote', null, params)
       .then((res) => {
         toast.success(res.data);
       })
