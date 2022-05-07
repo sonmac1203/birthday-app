@@ -28,7 +28,7 @@ const Events = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get('/events');
+      const response = await axios.get('/api/events');
       let Objs = {};
       response.data.map((entry) => {
         Objs[entry.date] = entry;
@@ -245,7 +245,7 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
         params.params['tag'] = newTag;
       }
       await axios
-        .post('/updateEvent', null, params)
+        .post('/api/updateEvent', null, params)
         .then((res) => {
           toast.success(res.data);
           setEditMode(false);
@@ -260,7 +260,7 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
       params.params['tag'] = newTag;
       params.params['date'] = selectedDay;
       await axios
-        .post('/createEvent', null, params)
+        .post('/api/createEvent', null, params)
         .then((res) => {
           toast.success(res.data);
           setEditMode(false);

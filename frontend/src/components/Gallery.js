@@ -19,7 +19,7 @@ const Gallery = () => {
   const [photos, setPhotos] = useState([]);
   useEffect(() => {
     (async () => {
-      const response = await axios.get('/gallery');
+      const response = await axios.get('/api/gallery');
       setPhotos(response.data);
     })();
   }, []);
@@ -151,7 +151,7 @@ const PhotoModal = ({ show, setShow }) => {
       },
     };
     await axios
-      .post('/addPhoto', null, params)
+      .post('/api/addPhoto', null, params)
       .then((res) => {
         toast.success(res.data);
         handleClose();
