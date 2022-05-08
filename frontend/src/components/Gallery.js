@@ -8,8 +8,6 @@ import {
   Container,
   Image,
 } from 'react-bootstrap';
-import { storage } from '../firebase/firebase';
-import { ref, uploadBytesResumable, getDownloadURL } from '@firebase/storage';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -108,57 +106,54 @@ const PhotoModal = ({ show, setShow }) => {
   const [location, setLocation] = useState('');
   const [date, setDate] = useState(null);
   const [fakeImageUrl, setFakeImageUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [progress, setProgress] = useState(0);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const handleClose = () => {
     setDescription('');
     setLocation('');
     setFakeImageUrl('');
-    setImageUrl('');
+    setPhotoFile(null);
     setShow(false);
   };
 
-  const handleUpload = (e) => {
+  const handleFile = (e) => {
     const selectedImage = e.target.files[0];
     setFakeImageUrl(URL.createObjectURL(selectedImage));
-    const storageRef = ref(storage, `/photos/${selectedImage.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, selectedImage);
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const prog = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setProgress(prog);
-      },
-      (error) => console.log(error),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setImageUrl(url);
-        });
-      }
-    );
+    setPhotoFile(selectedImage);
   };
 
-  const handleSave = async () => {
-    const params = {
-      params: {
-        url: imageUrl,
-        description: description,
-        date: date,
-        location: location,
-      },
-    };
-    await axios
-      .post('/api/addPhoto', null, params)
+  const handleSave = (file) => {
+    setUploading(true);
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', 'mjfztmfi');
+    data.append('cloud_name', 'dbugposxw');
+    axios
+      .post('https://api.cloudinary.com/v1_1/dbugposxw/image/upload', data)
       .then((res) => {
-        toast.success(res.data);
+        const params = {
+          params: {
+            url: res.data.url,
+            description: description,
+            date: date,
+            location: location,
+          },
+        };
+        axios
+          .post('/api/addPhoto', null, params)
+          .then((res) => {
+            toast.success(res.data);
+          })
+          .catch((err) => {
+            toast.error(err.response.data);
+          });
+      })
+      .then(() => {
+        setUploading(false);
         handleClose();
       })
-      .catch((err) => {
-        toast.error(err.response.data);
-        handleClose();
-      });
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -173,34 +168,12 @@ const PhotoModal = ({ show, setShow }) => {
         <Modal.Title>Add a photo</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Group className='mb-3' controlId='photoDescription'>
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as='textarea'
-            placeholder='Enter description'
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='photoLocation'>
-          <Form.Label>Where was it?</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='City, Country'
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='photoTime'>
-          <Form.Label>When was it?</Form.Label>
-          <Form.Control type='date' onChange={(e) => setDate(e.target.value)} />
-        </Form.Group>
         <Form.Group className='mb-3' controlId='photoUpload'>
           <Form.Label>Upload photo</Form.Label>
           <Form.Control
             type='file'
             accept='image/*'
-            onChange={(e) => handleUpload(e)}
+            onChange={(e) => handleFile(e)}
           />
           <div>
             {fakeImageUrl && (
@@ -213,13 +186,46 @@ const PhotoModal = ({ show, setShow }) => {
             )}
           </div>
         </Form.Group>
+        {photoFile && (
+          <>
+            <Form.Group className='mb-3' controlId='photoDescription'>
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as='textarea'
+                placeholder='Enter description'
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+              />
+            </Form.Group>
+            <Form.Group className='mb-3' controlId='photoLocation'>
+              <Form.Label>Where was it?</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='City, Country'
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-3' controlId='photoTime'>
+              <Form.Label>When was it?</Form.Label>
+              <Form.Control
+                type='date'
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </Form.Group>
+          </>
+        )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={handleClose}>
+        <Button variant='secondary' onClick={handleClose} disabled={uploading}>
           Close
         </Button>
-        <Button variant='primary' onClick={handleSave} disabled={!imageUrl}>
-          Save
+        <Button
+          variant='primary'
+          onClick={() => handleSave(photoFile)}
+          disabled={photoFile === null}
+        >
+          {!uploading ? 'Save' : 'Uploading ...'}
         </Button>
       </Modal.Footer>
     </Modal>
