@@ -122,7 +122,9 @@ const NoteItem = ({ note: { date, description, _id, title } }) => {
       <Card>
         <Card.Body>
           <div className='d-flex align-items-center mb-2'>
-            <Card.Subtitle className='text-muted me-auto'>{date}</Card.Subtitle>
+            <Card.Subtitle className='text-muted me-auto'>
+              {new Date(date).toDateString()}
+            </Card.Subtitle>
 
             <i
               className='fa-solid fa-thumbtack me-2'

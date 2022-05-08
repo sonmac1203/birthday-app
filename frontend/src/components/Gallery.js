@@ -68,7 +68,7 @@ const PhotoItem = ({ photo: { url, description, location, date } }) => {
             </div>
             <div>
               <i className='fa-solid fa-calendar me-2' />
-              {date}
+              {new Date(date).toLocaleDateString()}
             </div>
           </div>
         </div>
@@ -116,7 +116,6 @@ const PhotoModal = ({ show, setShow }) => {
     setFakeImageUrl('');
     setImageUrl('');
     setShow(false);
-    console.log(date);
   };
 
   const handleUpload = (e) => {
@@ -194,11 +193,7 @@ const PhotoModal = ({ show, setShow }) => {
         </Form.Group>
         <Form.Group className='mb-3' controlId='photoTime'>
           <Form.Label>When was it?</Form.Label>
-          <Form.Control
-            type='date'
-            // placeholder='MM/DD/YYYY'
-            onChange={(e) => setDate(e.target.value)}
-          />
+          <Form.Control type='date' onChange={(e) => setDate(e.target.value)} />
         </Form.Group>
         <Form.Group className='mb-3' controlId='photoUpload'>
           <Form.Label>Upload photo</Form.Label>
