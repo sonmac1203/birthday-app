@@ -10,6 +10,8 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useMediaQuery } from 'react-responsive';
+import DeleteModal from './DeleteModal';
 
 const Gallery = () => {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
@@ -48,18 +50,44 @@ const Gallery = () => {
   );
 };
 
-const PhotoItem = ({ photo: { url, description, location, date } }) => {
+const PhotoItem = ({ photo: { url, description, location, date, _id } }) => {
   const [showPhotoDetail, setShowPhotoDetail] = useState(false);
+  const isSmallDevice = useMediaQuery({ query: `(max-width: 768px)` });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleDelete = () => {
+    const params = {
+      params: {
+        id: _id,
+      },
+    };
+    axios
+      .delete('/api/deletePhoto', params)
+      .then((res) => {
+        toast.success(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      });
+  };
+
   return (
     <>
       <Col md='3' xs='4'>
-        <div
-          className='img-container'
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowPhotoDetail(true)}
-        >
+        <div className='img-container' style={{ cursor: 'pointer' }}>
           <img src={url} />
-          <div className='img-overlay d-flex flex-column align-items-center pt-2'>
+
+          <div
+            className={`img-overlay d-flex ${
+              !isSmallDevice
+                ? 'flex-column pt-2 ps-3'
+                : 'small-device flex-column justify-content-end pb-1 ps-1 gap-1'
+            }`}
+            style={{
+              fontSize: isSmallDevice ? '8px' : '',
+            }}
+            onClick={() => setShowPhotoDetail(true)}
+          >
             <div>
               <i className='fa-solid fa-location-dot me-2' />
               {location}
@@ -68,6 +96,20 @@ const PhotoItem = ({ photo: { url, description, location, date } }) => {
               <i className='fa-solid fa-calendar me-2' />
               {new Date(date).toLocaleDateString()}
             </div>
+            <i
+              className='fa-solid fa-trash'
+              style={{
+                position: 'absolute',
+                top: !isSmallDevice ? '0.5rem' : '',
+                right: !isSmallDevice ? '1rem' : '0.25rem',
+                bottom: isSmallDevice ? '0.45rem' : '',
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+                setShowDeleteModal(true);
+              }}
+            />
           </div>
         </div>
       </Col>
@@ -79,11 +121,16 @@ const PhotoItem = ({ photo: { url, description, location, date } }) => {
         location={location}
         date={date}
       />
+      <DeleteModal
+        show={showDeleteModal}
+        setShow={setShowDeleteModal}
+        handleDelete={handleDelete}
+      />
     </>
   );
 };
 
-const PhotoDetail = ({ url, description, show, setShow }) => {
+const PhotoDetail = ({ url, description, show, setShow, location, date }) => {
   const handleClose = () => setShow(false);
   return (
     <Modal

@@ -75,6 +75,17 @@ router.post('/api/addPhoto', async (req, res) => {
   }
 });
 
+router.delete('/api/deletePhoto', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('gallery').deleteOne({ _id: ObjectId(req.query.id) });
+    res.status(200).send('Successfully delete the photo');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
 router.get('/api/gallery', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
