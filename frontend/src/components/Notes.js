@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { async } from '@firebase/util';
+import DeleteModal from './DeleteModal';
 
 const Notes = () => {
   const [noteList, setNoteList] = useState([]);
@@ -85,6 +85,7 @@ const Notes = () => {
 };
 
 const NoteItem = ({ note: { date, description, _id, title } }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handlePin = async () => {
     const params = {
       params: {
@@ -118,39 +119,46 @@ const NoteItem = ({ note: { date, description, _id, title } }) => {
   };
 
   return (
-    <Col md='3'>
-      <Card>
-        <Card.Body>
-          <div className='d-flex align-items-center mb-2'>
-            <Card.Subtitle className='text-muted me-auto'>
-              {new Date(date).toDateString()}
-            </Card.Subtitle>
+    <>
+      <Col md='3'>
+        <Card>
+          <Card.Body>
+            <div className='d-flex align-items-center mb-2'>
+              <Card.Subtitle className='text-muted me-auto'>
+                {new Date(date).toDateString()}
+              </Card.Subtitle>
 
-            <i
-              className='fa-solid fa-thumbtack me-2'
-              style={{
-                fontSize: '17px',
-                cursor: 'pointer',
-              }}
-              onClick={handlePin}
-            />
-            <i
-              className='fa-solid fa-trash'
-              style={{
-                fontSize: '17px',
-                cursor: 'pointer',
-              }}
-              onClick={handleDelete}
-            />
-          </div>
-          <h3>{title}</h3>
-          <Card.Text
-            className='mt-3'
-            dangerouslySetInnerHTML={{ __html: description }}
-          ></Card.Text>
-        </Card.Body>
-      </Card>
-    </Col>
+              <i
+                className='fa-solid fa-thumbtack me-2'
+                style={{
+                  fontSize: '17px',
+                  cursor: 'pointer',
+                }}
+                onClick={handlePin}
+              />
+              <i
+                className='fa-solid fa-trash'
+                style={{
+                  fontSize: '17px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setShowDeleteModal(true)}
+              />
+            </div>
+            <h3>{title}</h3>
+            <Card.Text
+              className='mt-3'
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+      <DeleteModal
+        show={showDeleteModal}
+        setShow={setShowDeleteModal}
+        handleDelete={handleDelete}
+      />
+    </>
   );
 };
 
