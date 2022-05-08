@@ -84,16 +84,24 @@ const PhotoItem = ({ photo: { url, description, location, date, _id } }) => {
                 : 'small-device flex-column justify-content-end pb-1 ps-1 gap-1'
             }`}
             style={{
-              fontSize: isSmallDevice ? '8px' : '',
+              fontSize: isSmallDevice ? '10.5px' : '',
             }}
             onClick={() => setShowPhotoDetail(true)}
           >
             <div>
-              <i className='fa-solid fa-location-dot me-2' />
+              <i
+                className={`fa-solid fa-location-dot ${
+                  !isSmallDevice ? 'me-2' : 'me-1'
+                }`}
+              />
               {location}
             </div>
             <div>
-              <i className='fa-solid fa-calendar me-2' />
+              <i
+                className={`fa-solid fa-calendar ${
+                  !isSmallDevice ? 'me-2' : 'me-1'
+                }`}
+              />
               {new Date(date).toLocaleDateString()}
             </div>
             <i
