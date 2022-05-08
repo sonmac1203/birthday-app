@@ -59,6 +59,17 @@ router.post('/api/updateEvent', async (req, res) => {
   }
 });
 
+router.delete('/api/deleteEvent', async (req, res) => {
+  try {
+    const dbConnect = await mongoClient.getDb(databaseName);
+    dbConnect.collection('events').deleteOne({ _id: ObjectId(req.query.id) });
+    res.status(200).send('Successfully delete the event');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('A database error has occured');
+  }
+});
+
 router.post('/api/addPhoto', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);

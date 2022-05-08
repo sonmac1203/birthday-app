@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Calendar from 'react-calendar';
 import { appendYear, isSameDay } from '../utils/CalendarHelpers';
 import { useMediaQuery } from 'react-responsive';
+import DeleteModal from './DeleteModal';
 
 const anniversaryColor = '#F29496';
 const birthdayColor = '#7985E0';
@@ -373,30 +374,63 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
 
 const ListCards = ({ events }) => {
   return (
-    events.length > 0 &&
-    events.map((e, k) => (
+    events.length > 0 && events.map((e, k) => <ListItem event={e} key={k} />)
+  );
+};
+
+const ListItem = ({ event: { name, date, tag, _id } }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleDelete = () => {
+    const params = {
+      params: {
+        id: _id,
+      },
+    };
+    axios
+      .delete('/api/deleteEvent', params)
+      .then((res) => {
+        toast.success(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.response.data);
+      });
+  };
+
+  return (
+    <>
       <Card
-        key={k}
         className='mb-2'
         style={{
           borderColor:
-            e.tag === 'anniversary'
+            tag === 'anniversary'
               ? anniversaryColor
-              : e.tag === 'birthday'
+              : tag === 'birthday'
               ? birthdayColor
-              : e.tag === 'trip'
+              : tag === 'trip'
               ? tripColor
               : uncategorizedColor,
         }}
       >
         <Card.Body>
           <Card.Text className='mb-1'>
-            {new Date(e.date).toDateString()}
+            <div className='d-flex justify-content-between'>
+              {new Date(date).toDateString()}
+              <i
+                className='fa-solid fa-trash'
+                style={{ fontSize: '17px', cursor: 'pointer' }}
+                onClick={() => setShowDeleteModal(true)}
+              />
+            </div>
           </Card.Text>
-          <Card.Title className='mb-1'>{e.name}</Card.Title>
+          <Card.Title className='mb-1'>{name}</Card.Title>
         </Card.Body>
       </Card>
-    ))
+      <DeleteModal
+        show={showDeleteModal}
+        setShow={setShowDeleteModal}
+        handleDelete={handleDelete}
+      />
+    </>
   );
 };
 
