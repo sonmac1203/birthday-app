@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  Form,
-  Card,
-  Row,
-  Col,
-  Container,
-  Badge,
-} from 'react-bootstrap';
+import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Calendar from 'react-calendar';
@@ -31,7 +23,7 @@ const Events = () => {
       const response = await axios.get('/api/events');
       let Objs = {};
       response.data.map((entry) => {
-        Objs[entry.date] = entry;
+        Objs[new Date(entry.date).toLocaleDateString()] = entry;
       });
       Objs['added'] = true;
       setEvents(response.data);
@@ -280,103 +272,99 @@ const CalendarCard = ({ selectedDay, selectedObj, setDisabled }) => {
       }}
     >
       <Card.Body>
-        <Card.Title>
-          {!editMode ? (
-            <div className='d-flex justify-content-between'>
-              {selectedObj.name}
-              <i
-                style={{ fontSize: '20px', cursor: 'pointer' }}
-                className={`fa-solid ${
-                  selectedObj.added ? 'fa-pen' : 'fa-plus'
-                }`}
-                onClick={() => {
-                  setEditMode(true);
-                  setDisabled(true);
+        {!editMode ? (
+          <>
+            <Card.Title>
+              <div className='d-flex justify-content-between'>
+                {selectedObj.name}
+                <i
+                  style={{ fontSize: '20px', cursor: 'pointer' }}
+                  className={`fa-solid ${
+                    selectedObj.added ? 'fa-pen' : 'fa-plus'
+                  }`}
+                  onClick={() => {
+                    setEditMode(true);
+                    setDisabled(true);
+                  }}
+                />
+              </div>
+            </Card.Title>
+            <Card.Subtitle className='mb-2 text-muted'>
+              {selectedDay}
+            </Card.Subtitle>
+            <Card.Text className='mb-0'>{selectedObj.description}</Card.Text>
+            {selectedObj.added && (
+              <div
+                className='event-tag-badge py-1 px-2'
+                style={{
+                  backgroundColor:
+                    selectedObj.tag === 'anniversary'
+                      ? anniversaryColor
+                      : selectedObj.tag === 'birthday'
+                      ? birthdayColor
+                      : selectedObj.tag === 'trip'
+                      ? tripColor
+                      : uncategorizedColor,
                 }}
-              />
+              >
+                #{selectedObj.tag}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <Card.Title>
+              <Form.Group>
+                <Form.Label>What is the event?</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder={selectedObj.name}
+                  onChange={(e) => setNewName(e.target.value)}
+                />
+              </Form.Group>
+            </Card.Title>
+            <Card.Text className='mb-0'>
+              <Form.Group>
+                <Form.Label>How would you describe it?</Form.Label>
+                <Form.Control
+                  as='textarea'
+                  placeholder={selectedObj.description}
+                  onChange={(e) => setNewDes(e.target.value)}
+                />
+              </Form.Group>
+            </Card.Text>
+            <Form.Group className='mb-3 mt-4' controlId='eventTag'>
+              <Form.Select
+                aria-label='Tag select'
+                onChange={(e) => {
+                  setNewTag(e.target.value);
+                }}
+                defaultValue={selectedObj.added ? selectedObj.tag : ''}
+              >
+                {!selectedObj.added && <option>Choose a tag</option>}
+                {tags.map((tag, key) => (
+                  <option value={tag} key={key}>
+                    {tag}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <div className='mt-3'>
+              <Button
+                className='me-2'
+                disabled={
+                  (!newName || selectedObj.name === newName) &&
+                  (!newDes || selectedObj.description === newDes)
+                }
+                onClick={() => onClickUpdate(selectedObj)}
+              >
+                Save
+              </Button>
+              <Button variant='secondary' onClick={onClickCancel}>
+                Cancel
+              </Button>
             </div>
-          ) : (
-            <Form.Group>
-              <Form.Label>What is the event?</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder={selectedObj.name}
-                onChange={(e) => setNewName(e.target.value)}
-              />
-            </Form.Group>
-          )}
-        </Card.Title>
-        {!editMode && (
-          <Card.Subtitle className='mb-2 text-muted'>
-            {selectedDay}
-          </Card.Subtitle>
-        )}
-
-        <Card.Text className='mb-0'>
-          {!editMode ? (
-            selectedObj.description
-          ) : (
-            <Form.Group>
-              <Form.Label>How would you describe it?</Form.Label>
-              <Form.Control
-                as='textarea'
-                placeholder={selectedObj.description}
-                onChange={(e) => setNewDes(e.target.value)}
-              />
-            </Form.Group>
-          )}
-        </Card.Text>
-        {editMode && (
-          <Form.Group className='mb-3 mt-4' controlId='eventTag'>
-            <Form.Select
-              aria-label='Tag select'
-              onChange={(e) => {
-                setNewTag(e.target.value);
-              }}
-              defaultValue={selectedObj.added ? selectedObj.tag : ''}
-            >
-              {!selectedObj.added && <option>Choose a tag</option>}
-              {tags.map((tag, key) => (
-                <option value={tag} key={key}>
-                  {tag}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-        )}
-        {!editMode && selectedObj.added && (
-          <div
-            className='event-tag-badge py-1 px-2'
-            style={{
-              backgroundColor:
-                selectedObj.tag === 'anniversary'
-                  ? anniversaryColor
-                  : selectedObj.tag === 'birthday'
-                  ? birthdayColor
-                  : selectedObj.tag === 'trip'
-                  ? tripColor
-                  : uncategorizedColor,
-            }}
-          >
-            #{selectedObj.tag}
-          </div>
-        )}
-        {editMode && (
-          <div className='mt-3'>
-            <Button
-              className='me-2'
-              disabled={
-                (!newName || selectedObj.name === newName) &&
-                (!newDes || selectedObj.description === newDes)
-              }
-              onClick={() => onClickUpdate(selectedObj)}
-            >
-              Save
-            </Button>
-            <Button variant='secondary' onClick={onClickCancel}>
-              Cancel
-            </Button>
-          </div>
+          </>
         )}
       </Card.Body>
     </Card>
@@ -402,7 +390,9 @@ const ListCards = ({ events }) => {
         }}
       >
         <Card.Body>
-          <Card.Text className='mb-1'>{e.date}</Card.Text>
+          <Card.Text className='mb-1'>
+            {new Date(e.date).toDateString()}
+          </Card.Text>
           <Card.Title className='mb-1'>{e.name}</Card.Title>
         </Card.Body>
       </Card>
