@@ -5,7 +5,6 @@ import {
   Form,
   Row,
   Col,
-  Card,
   Container,
   Image,
 } from 'react-bootstrap';
@@ -107,7 +106,7 @@ const PhotoDetail = ({ url, description, show, setShow }) => {
 const PhotoModal = ({ show, setShow }) => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(null);
   const [fakeImageUrl, setFakeImageUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [progress, setProgress] = useState(0);
@@ -117,6 +116,7 @@ const PhotoModal = ({ show, setShow }) => {
     setFakeImageUrl('');
     setImageUrl('');
     setShow(false);
+    console.log(date);
   };
 
   const handleUpload = (e) => {
@@ -195,25 +195,22 @@ const PhotoModal = ({ show, setShow }) => {
         <Form.Group className='mb-3' controlId='photoTime'>
           <Form.Label>When was it?</Form.Label>
           <Form.Control
-            type='text'
-            placeholder='MM/DD/YYYY'
+            type='date'
+            // placeholder='MM/DD/YYYY'
             onChange={(e) => setDate(e.target.value)}
           />
         </Form.Group>
         <Form.Group className='mb-3' controlId='photoUpload'>
           <Form.Label>Upload photo</Form.Label>
-          <div className='d-flex justify-content-between'>
-            <input
-              type='file'
-              accept='image/*'
-              id='input-photo'
-              onChange={(e) => handleUpload(e)}
-            />
-          </div>
+          <Form.Control
+            type='file'
+            accept='image/*'
+            onChange={(e) => handleUpload(e)}
+          />
           <div>
             {fakeImageUrl && (
               <img
-                // className='mt-5'
+                className='mt-3'
                 src={fakeImageUrl}
                 alt='uploaded'
                 style={{ width: '100%' }}
