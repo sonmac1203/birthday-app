@@ -7,7 +7,11 @@ const databaseName = 'birthday-project';
 router.get('/api/events', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    const events = await dbConnect.collection('events').find({}).toArray();
+    const events = await dbConnect
+      .collection('events')
+      .find({})
+      .sort({ date: -1 })
+      .toArray();
     res.status(200).send(events);
   } catch (err) {
     console.log(err);
@@ -21,7 +25,7 @@ router.post('/api/createEvent', async (req, res) => {
     dbConnect.collection('events').insertOne({
       name: req.query.name,
       description: req.query.description,
-      date: req.query.date,
+      date: new Date(req.query.date),
       tag: req.query.tag,
       added: true,
     });
@@ -61,7 +65,7 @@ router.post('/api/addPhoto', async (req, res) => {
     dbConnect.collection('gallery').insertOne({
       url: req.query.url,
       description: req.query.description,
-      date: req.query.date,
+      date: new Date(req.query.date),
       location: req.query.location,
     });
     res.status(200).send('Successfully added a new photo to gallery!');
@@ -74,7 +78,11 @@ router.post('/api/addPhoto', async (req, res) => {
 router.get('/api/gallery', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    const photos = await dbConnect.collection('gallery').find({}).toArray();
+    const photos = await dbConnect
+      .collection('gallery')
+      .find({})
+      .sort({ date: -1 })
+      .toArray();
     res.status(200).send(photos);
   } catch (err) {
     console.log(err);
@@ -85,7 +93,11 @@ router.get('/api/gallery', async (req, res) => {
 router.get('/api/notes', async (req, res) => {
   try {
     const dbConnect = await mongoClient.getDb(databaseName);
-    const notes = await dbConnect.collection('notes').find({}).toArray();
+    const notes = await dbConnect
+      .collection('notes')
+      .find({})
+      .sort({ date: -1 })
+      .toArray();
     res.status(200).send(notes);
   } catch (err) {
     console.log(err);
@@ -99,7 +111,7 @@ router.post('/api/createNote', async (req, res) => {
     dbConnect.collection('notes').insertOne({
       title: req.query.title,
       description: req.query.description,
-      date: req.query.date,
+      date: new Date(req.query.date),
       pinned: false,
     });
     res.status(200).send('Successfully create a new note!');
